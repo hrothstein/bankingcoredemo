@@ -1,0 +1,17 @@
+{
+  "name": "core-banking-demo",
+  "version": "1.0.0",
+  "description": "Core Banking Demo - Simplified Version",
+  "main": "backend/simple-app.js",
+  "scripts": {
+    "start": "node backend/simple-app.js",
+    "dev": "nodemon backend/simple-app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

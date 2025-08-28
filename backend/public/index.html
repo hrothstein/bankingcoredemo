@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Banking Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-md">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <svg class="h-8 w-8 text-blue-600 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M2 6h20v2H2V6zm0 5h20v2H2v-2zm0 5h20v2H2v-2z"/>
+                        </svg>
+                        <span class="text-xl font-bold text-gray-800">Core Banking Demo</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm text-gray-600">Demo System</span>
+                        <button id="loginBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <div id="loginSection" class="max-w-md mx-auto bg-white rounded-lg shadow p-8">
+                <h1 class="text-2xl font-bold text-center mb-6">Banking System Login</h1>
+                <form id="loginForm">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                        <input type="text" id="username" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="admin or john.smith0">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="admin123 or demo123">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Sign In
+                    </button>
+                </form>
+                <div class="mt-4 text-sm text-gray-600 text-center">
+                    <p>Demo Accounts:</p>
+                    <p>Admin: admin / admin123</p>
+                    <p>Customer: john.smith0 / demo123</p>
+                </div>
+            </div>
+
+            <div id="dashboardSection" class="hidden">
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Banking Dashboard</h1>
+                
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="bg-blue-100 p-3 rounded-lg">
+                                <svg class="h-6 w-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            </div>
+                            <div class="ml-5">
+                                <p class="text-sm font-medium text-gray-500">Total Customers</p>
+                                <p class="text-2xl font-semibold text-gray-900">50</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="bg-green-100 p-3 rounded-lg">
+                                <svg class="h-6 w-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M2 6h20v2H2V6zm0 5h20v2H2v-2zm0 5h20v2H2v-2z"/>
+                                </svg>
+                            </div>
+                            <div class="ml-5">
+                                <p class="text-sm font-medium text-gray-500">Active Accounts</p>
+                                <p class="text-2xl font-semibold text-gray-900">156</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 p-3 rounded-lg">
+                                <svg class="h-6 w-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M7 14l5-5 5 5z"/>
+                                </svg>
+                            </div>
+                            <div class="ml-5">
+                                <p class="text-sm font-medium text-gray-500">Transactions Today</p>
+                                <p class="text-2xl font-semibold text-gray-900">1,247</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="bg-yellow-100 p-3 rounded-lg">
+                                <svg class="h-6 w-6 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+                                </svg>
+                            </div>
+                            <div class="ml-5">
+                                <p class="text-sm font-medium text-gray-500">Active Alerts</p>
+                                <p class="text-2xl font-semibold text-gray-900">7</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo Scenarios -->
+                <div class="bg-white rounded-lg shadow p-6 mb-8">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Demo Scenarios</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Customer Onboarding -->
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                                    <svg class="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold text-gray-900">Customer Onboarding</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">Simulate new customer journey with KYC validation and account opening process.</p>
+                            <button onclick="runScenario('customer-onboarding')" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-150">
+                                Run Scenario
+                            </button>
+                        </div>
+
+                        <!-- Loan Origination -->
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-green-100 p-2 rounded-lg mr-3">
+                                    <svg class="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M2 6h20v2H2V6zm0 5h20v2H2v-2zm0 5h20v2H2v-2z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold text-gray-900">Loan Application</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">Process loan application with credit check, underwriting, and approval workflow.</p>
+                            <button onclick="runScenario('loan-origination')" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-150">
+                                Run Scenario
+                            </button>
+                        </div>
+
+                        <!-- Compliance Alert -->
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-yellow-100 p-2 rounded-lg mr-3">
+                                    <svg class="h-5 w-5 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold text-gray-900">Compliance Alert</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">Trigger AML alert with suspicious transaction monitoring and case creation.</p>
+                            <button onclick="runScenario('compliance-alert')" class="w-full bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition duration-150">
+                                Run Scenario
+                            </button>
+                        </div>
+
+                        <!-- Fraud Detection -->
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-red-100 p-2 rounded-lg mr-3">
+                                    <svg class="h-5 w-5 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5H16V18H8V11.5H9.2V10C9.2,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,10V11.5H13.5V10C13.5,8.7 12.8,8.2 12,8.2Z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="font-semibold text-gray-900">Fraud Detection</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">Simulate suspicious transaction detection with real-time fraud scoring.</p>
+                            <button onclick="runScenario('fraud-detection')" class="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-150">
+                                Run Scenario
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Log -->
+                <div id="activityLog" class="bg-white rounded-lg shadow p-6 mb-8 hidden">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Demo Activity Log</h2>
+                    <div id="logEntries" class="space-y-2 max-h-64 overflow-y-auto">
+                        <!-- Log entries will be added here -->
+                    </div>
+                    <button onclick="clearLog()" class="mt-4 text-sm text-gray-600 hover:text-gray-800">Clear Log</button>
+                </div>
+
+                <!-- Data Entry Section -->
+                <div class="bg-white rounded-lg shadow p-6 mb-8">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Banking Operations</h2>
+                    
+                    <!-- Tab Navigation -->
+                    <div class="border-b border-gray-200 mb-6">
+                        <nav class="-mb-px flex space-x-8">
+                            <button onclick="showTab('customer')" id="customerTab" class="py-2 px-1 border-b-2 border-blue-500 text-blue-600 font-medium text-sm">
+                                New Customer
+                            </button>
+                            <button onclick="showTab('account')" id="accountTab" class="py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm">
+                                Open Account
+                            </button>
+                            <button onclick="showTab('transaction')" id="transactionTab" class="py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm">
+                                Process Transaction
+                            </button>
+                            <button onclick="showTab('view')" id="viewTab" class="py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm">
+                                View Data
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Customer Form -->
+                    <div id="customerForm" class="tab-content">
+                        <form onsubmit="createCustomer(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                                <input type="text" name="firstName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                                <input type="text" name="lastName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                                <input type="tel" name="phone" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="555-123-4567">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                                <input type="date" name="dateOfBirth" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Annual Income</label>
+                                <input type="number" name="annualIncome" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="75000">
+                            </div>
+                            <div class="md:col-span-2">
+                                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
+                                    Create Customer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Account Form -->
+                    <div id="accountForm" class="tab-content hidden">
+                        <form onsubmit="openAccount(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Customer Email</label>
+                                <input type="email" name="customerEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="customer@example.com" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Account Type</label>
+                                <select name="accountType" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+                                    <option value="">Select Account Type</option>
+                                    <option value="CHECKING">Checking Account</option>
+                                    <option value="SAVINGS">Savings Account</option>
+                                    <option value="CREDIT_CARD">Credit Card</option>
+                                    <option value="PERSONAL_LOAN">Personal Loan</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                                <input type="text" name="productName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Premium Checking" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Initial Deposit</label>
+                                <input type="number" name="initialDeposit" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="1000.00">
+                            </div>
+                            <div class="md:col-span-2">
+                                <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500">
+                                    Open Account
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Transaction Form -->
+                    <div id="transactionForm" class="tab-content hidden">
+                        <form onsubmit="processTransaction(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Transaction Type</label>
+                                <select name="transactionType" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+                                    <option value="">Select Type</option>
+                                    <option value="DEPOSIT">Deposit</option>
+                                    <option value="WITHDRAWAL">Withdrawal</option>
+                                    <option value="TRANSFER">Transfer</option>
+                                    <option value="PAYMENT">Payment</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+                                <input type="number" name="amount" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="500.00" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">From Account (for withdrawals/transfers)</label>
+                                <input type="text" name="fromAccount" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Account number or email">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">To Account (for deposits/transfers)</label>
+                                <input type="text" name="toAccount" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Account number or email">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <input type="text" name="description" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Transaction description">
+                            </div>
+                            <div class="md:col-span-2">
+                                <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 focus:ring-2 focus:ring-purple-500">
+                                    Process Transaction
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- View Data -->
+                    <div id="viewForm" class="tab-content hidden">
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <button onclick="loadCustomers()" class="bg-blue-100 text-blue-700 px-4 py-3 rounded-lg hover:bg-blue-200">
+                                    View Customers
+                                </button>
+                                <button onclick="loadAccounts()" class="bg-green-100 text-green-700 px-4 py-3 rounded-lg hover:bg-green-200">
+                                    View Accounts
+                                </button>
+                                <button onclick="loadTransactions()" class="bg-purple-100 text-purple-700 px-4 py-3 rounded-lg hover:bg-purple-200">
+                                    View Transactions
+                                </button>
+                            </div>
+                            <div id="dataDisplay" class="mt-6 bg-gray-50 p-4 rounded-lg hidden">
+                                <pre id="dataContent" class="text-sm overflow-auto max-h-96"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Status -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Integration Status</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">MuleSoft Connection</span>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Connected
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">Salesforce FSC Sync</span>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Active
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">API Gateway</span>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Online
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isLoggedIn = false;
+        let currentUser = null;
+
+        // DOM elements
+        const loginSection = document.getElementById('loginSection');
+        const dashboardSection = document.getElementById('dashboardSection');
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        // Login form handler
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+            
+            try {
+                const response = await fetch('/api/v1/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    isLoggedIn = true;
+                    currentUser = data.user;
+                    showDashboard();
+                } else {
+                    alert('Login failed: ' + data.message);
+                }
+            } catch (error) {
+                alert('Login error: ' + error.message);
+            }
+        });
+
+        // Show dashboard
+        function showDashboard() {
+            loginSection.classList.add('hidden');
+            dashboardSection.classList.remove('hidden');
+        }
+
+        // Run demo scenario
+        async function runScenario(scenario) {
+            const button = event.target;
+            const originalText = button.textContent;
+            
+            // Show loading state
+            button.textContent = 'Running...';
+            button.disabled = true;
+            button.classList.add('opacity-50');
+            
+            try {
+                const response = await fetch(`/api/v1/demo/scenario/${scenario}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-API-Key': 'demo-api-key'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                // Add to activity log
+                addLogEntry(scenario, data.message, 'success');
+                
+                // Show success notification
+                showNotification('✅ ' + data.message, 'success');
+                
+                // Update stats (simulate real activity)
+                updateStats();
+                
+            } catch (error) {
+                addLogEntry(scenario, error.message, 'error');
+                showNotification('❌ Scenario failed: ' + error.message, 'error');
+            } finally {
+                // Reset button
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                    button.classList.remove('opacity-50');
+                }, 1000);
+            }
+        }
+
+        // Add entry to activity log
+        function addLogEntry(scenario, message, type) {
+            const activityLog = document.getElementById('activityLog');
+            const logEntries = document.getElementById('logEntries');
+            
+            // Show log if hidden
+            activityLog.classList.remove('hidden');
+            
+            const entry = document.createElement('div');
+            entry.className = `p-3 rounded-lg ${type === 'success' ? 'bg-green-50 border-l-4 border-green-500' : 'bg-red-50 border-l-4 border-red-500'}`;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const scenarioName = scenario.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            
+            entry.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="font-medium ${type === 'success' ? 'text-green-800' : 'text-red-800'}">${scenarioName}</p>
+                        <p class="text-sm ${type === 'success' ? 'text-green-600' : 'text-red-600'}">${message}</p>
+                    </div>
+                    <span class="text-xs ${type === 'success' ? 'text-green-500' : 'text-red-500'}">${timestamp}</span>
+                </div>
+            `;
+            
+            logEntries.insertBefore(entry, logEntries.firstChild);
+            
+            // Keep only last 10 entries
+            while (logEntries.children.length > 10) {
+                logEntries.removeChild(logEntries.lastChild);
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+                type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => notification.classList.add('opacity-100'), 10);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        // Update stats (simulate activity)
+        function updateStats() {
+            // This could be expanded to show real-time updates to the dashboard stats
+            console.log('Stats updated - new activity recorded');
+        }
+
+        // Clear activity log
+        function clearLog() {
+            const logEntries = document.getElementById('logEntries');
+            logEntries.innerHTML = '';
+            document.getElementById('activityLog').classList.add('hidden');
+        }
+
+        // Check system status on load
+        async function checkStatus() {
+            try {
+                const response = await fetch('/status');
+                const data = await response.json();
+                console.log('System Status:', data);
+            } catch (error) {
+                console.error('Status check failed:', error);
+            }
+        }
+
+        // Tab management
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+            
+            // Remove active styles from all tabs
+            const tabs = document.querySelectorAll('[id$="Tab"]');
+            tabs.forEach(tab => {
+                tab.classList.remove('border-blue-500', 'text-blue-600');
+                tab.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + 'Form').classList.remove('hidden');
+            
+            // Add active styles to selected tab
+            const activeTab = document.getElementById(tabName + 'Tab');
+            activeTab.classList.remove('border-transparent', 'text-gray-500');
+            activeTab.classList.add('border-blue-500', 'text-blue-600');
+        }
+
+        // Create customer
+        async function createCustomer(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            const customerData = {
+                customerType: 'INDIVIDUAL',
+                firstName: formData.get('firstName'),
+                lastName: formData.get('lastName'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                dateOfBirth: formData.get('dateOfBirth'),
+                annualIncome: parseFloat(formData.get('annualIncome')) || null
+            };
+            
+            try {
+                const response = await fetch('/api/v1/customers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': 'demo-api-key'
+                    },
+                    body: JSON.stringify(customerData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showNotification('✅ Customer created successfully!', 'success');
+                    addLogEntry('customer-creation', `Customer ${customerData.firstName} ${customerData.lastName} created`, 'success');
+                    event.target.reset();
+                } else {
+                    showNotification('❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showNotification('❌ Error creating customer: ' + error.message, 'error');
+            }
+        }
+
+        // Open account
+        async function openAccount(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            const accountData = {
+                customerEmail: formData.get('customerEmail'),
+                accountType: formData.get('accountType'),
+                productName: formData.get('productName'),
+                initialDeposit: parseFloat(formData.get('initialDeposit')) || 0
+            };
+            
+            try {
+                const response = await fetch('/api/v1/accounts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': 'demo-api-key'
+                    },
+                    body: JSON.stringify(accountData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showNotification('✅ Account opened successfully!', 'success');
+                    addLogEntry('account-opening', `${accountData.accountType} account opened for ${accountData.customerEmail}`, 'success');
+                    event.target.reset();
+                } else {
+                    showNotification('❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showNotification('❌ Error opening account: ' + error.message, 'error');
+            }
+        }
+
+        // Process transaction
+        async function processTransaction(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            const transactionData = {
+                transactionType: formData.get('transactionType'),
+                amount: parseFloat(formData.get('amount')),
+                fromAccount: formData.get('fromAccount'),
+                toAccount: formData.get('toAccount'),
+                description: formData.get('description')
+            };
+            
+            try {
+                const response = await fetch('/api/v1/transactions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': 'demo-api-key'
+                    },
+                    body: JSON.stringify(transactionData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showNotification('✅ Transaction processed successfully!', 'success');
+                    addLogEntry('transaction-processing', `${transactionData.transactionType} of $${transactionData.amount} processed`, 'success');
+                    event.target.reset();
+                } else {
+                    showNotification('❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showNotification('❌ Error processing transaction: ' + error.message, 'error');
+            }
+        }
+
+        // Load customers
+        async function loadCustomers() {
+            try {
+                const response = await fetch('/api/v1/customers', {
+                    headers: {
+                        'X-API-Key': 'demo-api-key'
+                    }
+                });
+                
+                const data = await response.json();
+                displayData(data, 'Customers');
+            } catch (error) {
+                showNotification('❌ Error loading customers: ' + error.message, 'error');
+            }
+        }
+
+        // Load accounts
+        async function loadAccounts() {
+            try {
+                const response = await fetch('/api/v1/accounts', {
+                    headers: {
+                        'X-API-Key': 'demo-api-key'
+                    }
+                });
+                
+                const data = await response.json();
+                displayData(data, 'Accounts');
+            } catch (error) {
+                showNotification('❌ Error loading accounts: ' + error.message, 'error');
+            }
+        }
+
+        // Load transactions
+        async function loadTransactions() {
+            try {
+                const response = await fetch('/api/v1/transactions', {
+                    headers: {
+                        'X-API-Key': 'demo-api-key'
+                    }
+                });
+                
+                const data = await response.json();
+                displayData(data, 'Transactions');
+            } catch (error) {
+                showNotification('❌ Error loading transactions: ' + error.message, 'error');
+            }
+        }
+
+        // Display data
+        function displayData(data, title) {
+            const dataDisplay = document.getElementById('dataDisplay');
+            const dataContent = document.getElementById('dataContent');
+            
+            dataContent.textContent = `${title}:\n\n` + JSON.stringify(data, null, 2);
+            dataDisplay.classList.remove('hidden');
+        }
+
+        // Initialize
+        checkStatus();
+    </script>
+</body>
+</html>
