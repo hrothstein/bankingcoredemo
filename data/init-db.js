@@ -24,72 +24,44 @@ function initializeDatabase() {
       const schemaPath = path.join(__dirname, 'schema.sql');
       const schema = fs.readFileSync(schemaPath, 'utf8');
       
-      // Split schema into individual statements and execute
-      const statements = schema
-        .split(';')
-        .filter(stmt => stmt.trim())
-        .map(stmt => stmt.trim() + ';');
-
-      let completed = 0;
-      const total = statements.length;
-
-      statements.forEach((statement, index) => {
-        if (statement.trim()) {
-          db.run(statement, (err) => {
-            if (err && !err.message.includes('already exists')) {
-              logger.error('Error executing statement:', err);
-              reject(err);
-              return;
-            }
-            
-            completed++;
-            if (completed === total - 1) { // -1 because last statement might be empty
-              logger.info('Database schema initialized successfully');
-              
-              // Create default admin user if not exists
-              db.get('SELECT COUNT(*) as count FROM users WHERE username = ?', ['admin'], (err, row) => {
-                if (err) {
-                  logger.error('Error checking admin user:', err);
-                  reject(err);
-                  return;
-                }
-                
-                if (!row || row.count === 0) {
-                  const bcrypt = require('bcrypt');
-                  const { v4: uuidv4 } = require('uuid');
-                  
-                  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-                  const passwordHash = bcrypt.hashSync(adminPassword, 10);
-                  
-                  db.run(`
-                    INSERT INTO users (user_id, username, email, password_hash, role, is_active)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                  `, [
-                    uuidv4(),
-                    'admin',
-                    'admin@corebanking.demo',
-                    passwordHash,
-                    'ADMIN',
-                    1
-                  ], (err) => {
-                    if (err) {
-                      logger.error('Error creating admin user:', err);
-                      reject(err);
-                      return;
-                    }
-                    
-                    logger.info('Default admin user created (username: admin)');
-                    global.db = db;
-                    resolve(db);
-                  });
-                } else {
-                  global.db = db;
-                  resolve(db);
-                }
-              });
-            }
-          });
+      // Execute schema as a single transaction
+      db.exec(schema, (err) => {
+        if (err) {
+          logger.error('Error executing schema:', err);
+          reject(err);
+          return;
         }
+        
+        logger.info('Database schema initialized successfully');
+        
+        // Create default admin user if not exists
+        const bcrypt = require('bcrypt');
+        const { v4: uuidv4 } = require('uuid');
+        
+        const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+        const passwordHash = bcrypt.hashSync(adminPassword, 10);
+        
+        db.run(`
+          INSERT OR IGNORE INTO users (user_id, username, email, password_hash, role, is_active)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `, [
+          uuidv4(),
+          'admin',
+          'admin@corebanking.demo',
+          passwordHash,
+          'ADMIN',
+          1
+        ], (err) => {
+          if (err) {
+            logger.error('Error creating admin user:', err);
+            reject(err);
+            return;
+          }
+          
+          logger.info('Default admin user created (username: admin)');
+          global.db = db;
+          resolve(db);
+        });
       });
     } catch (error) {
       logger.error('Database initialization failed:', error);

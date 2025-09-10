@@ -170,15 +170,30 @@ router.get('/', authenticateToken, authorize('ADMIN', 'MANAGER', 'TELLER'), asyn
     query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
     params.push(parseInt(limit), parseInt(offset));
     
-    const stmt = db.prepare(query);
-    const customers = stmt.all(...params);
+    const customers = await new Promise((resolve, reject) => {
+      db.all(query, params, (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows || []);
+      });
+    });
     
     // Remove sensitive data
-    customers.forEach(customer => delete customer.ssn_hash);
+    if (customers && Array.isArray(customers) && customers.length > 0) {
+      customers.forEach(customer => delete customer.ssn_hash);
+    }
     
     // Get total count
-    const countStmt = db.prepare('SELECT COUNT(*) as total FROM customers');
-    const { total } = countStmt.get();
+    const countParams = kycStatus || riskRating ? params.slice(0, -2) : [];
+    const countQuery = 'SELECT COUNT(*) as total FROM customers' + 
+                      (kycStatus ? ' WHERE kyc_status = ?' : '') +
+                      (riskRating ? (kycStatus ? ' AND' : ' WHERE') + ' risk_rating = ?' : '');
+    
+    const { total } = await new Promise((resolve, reject) => {
+      db.get(countQuery, countParams, (err, row) => {
+        if (err) reject(err);
+        else resolve(row || { total: 0 });
+      });
+    });
     
     res.json({
       status: 'success',

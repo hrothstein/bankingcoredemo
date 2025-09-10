@@ -119,6 +119,71 @@ router.post('/', authenticateToken, async (req, res, next) => {
 
 /**
  * @swagger
+ * /accounts:
+ *   get:
+ *     summary: List all accounts
+ *     tags: [Accounts]
+ *     security:
+ *       - bearerAuth: []
+ */
+router.get('/', authenticateToken, authorize('ADMIN', 'MANAGER', 'TELLER'), async (req, res, next) => {
+  try {
+    const { limit = 50, offset = 0, accountType, status } = req.query;
+    const db = getDb();
+    
+    let query = 'SELECT * FROM accounts WHERE 1=1';
+    const params = [];
+    
+    if (accountType) {
+      query += ' AND account_type = ?';
+      params.push(accountType);
+    }
+    
+    if (status) {
+      query += ' AND status = ?';
+      params.push(status);
+    }
+    
+    query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+    params.push(parseInt(limit), parseInt(offset));
+    
+    const accounts = await new Promise((resolve, reject) => {
+      db.all(query, params, (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows || []);
+      });
+    });
+    
+    // Get total count
+    const countParams = accountType || status ? params.slice(0, -2) : [];
+    const countQuery = 'SELECT COUNT(*) as total FROM accounts' + 
+                      (accountType ? ' WHERE account_type = ?' : '') +
+                      (status ? (accountType ? ' AND' : ' WHERE') + ' status = ?' : '');
+    
+    const { total } = await new Promise((resolve, reject) => {
+      db.get(countQuery, countParams, (err, row) => {
+        if (err) reject(err);
+        else resolve(row || { total: 0 });
+      });
+    });
+    
+    res.json({
+      status: 'success',
+      data: accounts,
+      pagination: {
+        total,
+        limit: parseInt(limit),
+        offset: parseInt(offset)
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * @swagger
  * /accounts/{accountId}:
  *   get:
  *     summary: Get account details and balance

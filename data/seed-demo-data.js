@@ -27,15 +27,13 @@ async function seedDemoData() {
   logger.info('Starting demo data seeding...');
 
   try {
-    // Clear existing demo data
-    transaction(() => {
-      db.exec('DELETE FROM transactions');
-      db.exec('DELETE FROM loan_applications');
-      db.exec('DELETE FROM compliance_alerts');
-      db.exec('DELETE FROM accounts');
-      db.exec('DELETE FROM users WHERE role = "CUSTOMER"');
-      db.exec('DELETE FROM customers');
-    });
+    // Clear existing demo data (except admin user)
+    db.run('DELETE FROM transactions');
+    db.run('DELETE FROM loan_applications');
+    db.run('DELETE FROM compliance_alerts');
+    db.run('DELETE FROM accounts');
+    db.run('DELETE FROM users WHERE role = "CUSTOMER"');
+    db.run('DELETE FROM customers');
 
     // Create customers
     const customers = [];
@@ -265,17 +263,32 @@ module.exports = seedDemoData;
 
 // Run if called directly
 if (require.main === module) {
-  const { initializeDatabase } = require('./init-db');
+  // Initialize database connection and then seed data
+  const sqlite3 = require('sqlite3').verbose();
+  const path = require('path');
   
-  initializeDatabase()
-    .then(() => seedDemoData())
+  const DB_PATH = process.env.DB_PATH || path.join(__dirname, '../banking-demo.db');
+  const db = new sqlite3.Database(DB_PATH);
+  global.db = db;
+  
+  seedDemoData()
     .then((stats) => {
       console.log('✅ Demo data seeded successfully!');
       console.log('Statistics:', stats);
-      process.exit(0);
+      
+      // Close database connection properly
+      db.close((err) => {
+        if (err) {
+          console.error('Error closing database:', err);
+        }
+        process.exit(0);
+      });
     })
     .catch(error => {
       console.error('❌ Demo data seeding failed:', error);
-      process.exit(1);
+      // Close database connection on error too
+      db.close(() => {
+        process.exit(1);
+      });
     });
 }

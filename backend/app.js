@@ -138,9 +138,21 @@ const { initializeDatabase } = require('../data/init-db');
 
 async function startServer() {
   try {
-    // Initialize database
-    await initializeDatabase();
-    logger.info('Database initialized successfully');
+    // Connect to existing database without re-initializing
+    const sqlite3 = require('sqlite3').verbose();
+    const fs = require('fs');
+    const DB_PATH = process.env.DB_PATH || path.join(__dirname, '../banking-demo.db');
+    
+    if (fs.existsSync(DB_PATH)) {
+      // Database exists, just connect
+      const db = new sqlite3.Database(DB_PATH);
+      global.db = db;
+      logger.info('Connected to existing database');
+    } else {
+      // Database doesn't exist, initialize it
+      await initializeDatabase();
+      logger.info('Database initialized successfully');
+    }
 
     // Start both servers
     const API_PORT = process.env.API_PORT || 3001;

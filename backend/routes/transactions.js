@@ -132,6 +132,84 @@ router.post('/', authenticateToken, async (req, res, next) => {
 
 /**
  * @swagger
+ * /transactions:
+ *   get:
+ *     summary: List all transactions
+ *     tags: [Transactions]
+ *     security:
+ *       - bearerAuth: []
+ */
+router.get('/', authenticateToken, authorize('ADMIN', 'MANAGER', 'TELLER'), async (req, res, next) => {
+  try {
+    const { limit = 50, offset = 0, transactionType, status, accountId } = req.query;
+    const db = getDb();
+    
+    let query = 'SELECT * FROM transactions WHERE 1=1';
+    const params = [];
+    
+    if (transactionType) {
+      query += ' AND transaction_type = ?';
+      params.push(transactionType);
+    }
+    
+    if (status) {
+      query += ' AND status = ?';
+      params.push(status);
+    }
+    
+    if (accountId) {
+      query += ' AND (from_account_id = ? OR to_account_id = ?)';
+      params.push(accountId, accountId);
+    }
+    
+    query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+    params.push(parseInt(limit), parseInt(offset));
+    
+    const transactions = await new Promise((resolve, reject) => {
+      db.all(query, params, (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows || []);
+      });
+    });
+    
+    // Get total count
+    const countParams = params.slice(0, -2); // Remove limit and offset
+    let countQuery = 'SELECT COUNT(*) as total FROM transactions WHERE 1=1';
+    
+    if (transactionType) {
+      countQuery += ' AND transaction_type = ?';
+    }
+    if (status) {
+      countQuery += ' AND status = ?';
+    }
+    if (accountId) {
+      countQuery += ' AND (from_account_id = ? OR to_account_id = ?)';
+    }
+    
+    const { total } = await new Promise((resolve, reject) => {
+      db.get(countQuery, countParams, (err, row) => {
+        if (err) reject(err);
+        else resolve(row || { total: 0 });
+      });
+    });
+    
+    res.json({
+      status: 'success',
+      data: transactions,
+      pagination: {
+        total,
+        limit: parseInt(limit),
+        offset: parseInt(offset)
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * @swagger
  * /transactions/{transactionId}:
  *   get:
  *     summary: Get transaction status

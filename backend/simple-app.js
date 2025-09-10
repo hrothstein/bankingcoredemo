@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 // Create single Express app
 const app = express();
@@ -11,6 +13,48 @@ app.use(express.json());
 
 // Serve static files first
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Swagger configuration
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Core Banking API',
+      version: '1.0.0',
+      description: 'Complete Banking System API for MuleSoft Integration Demos',
+      contact: {
+        name: 'Banking API Support',
+        email: 'api@corebanking.demo'
+      }
+    },
+    servers: [
+      {
+        url: `http://localhost:3000/api/v1`,
+        description: 'Demo server'
+      }
+    ],
+    components: {
+      securitySchemes: {
+        ApiKeyAuth: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'X-API-Key'
+        }
+      }
+    },
+    security: [
+      {
+        ApiKeyAuth: []
+      }
+    ]
+  },
+  apis: ['./backend/simple-app.js']
+};
+
+const swaggerSpec = swaggerJsDoc(swaggerOptions);
+
+// Swagger documentation endpoint
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Mock database
 const mockData = {
@@ -114,7 +158,34 @@ const mockData = {
   ]
 };
 
-// Simple login endpoint
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Authenticate user and receive token
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: admin
+ *               password:
+ *                 type: string
+ *                 example: admin123
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       401:
+ *         description: Invalid credentials
+ */
 app.post('/api/v1/auth/login', (req, res) => {
   const { username, password } = req.body;
   
@@ -161,7 +232,63 @@ app.get('/status', (req, res) => {
   });
 });
 
-// Create customer
+/**
+ * @swagger
+ * /customers:
+ *   post:
+ *     summary: Create new customer
+ *     tags: [Customers]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - firstName
+ *               - lastName
+ *               - email
+ *             properties:
+ *               customerType:
+ *                 type: string
+ *                 example: INDIVIDUAL
+ *               firstName:
+ *                 type: string
+ *                 example: John
+ *               lastName:
+ *                 type: string
+ *                 example: Doe
+ *               email:
+ *                 type: string
+ *                 example: john.doe@example.com
+ *               phone:
+ *                 type: string
+ *                 example: 555-123-4567
+ *               dateOfBirth:
+ *                 type: string
+ *                 format: date
+ *                 example: 1990-01-01
+ *               annualIncome:
+ *                 type: number
+ *                 example: 75000
+ *     responses:
+ *       201:
+ *         description: Customer created successfully
+ *       400:
+ *         description: Customer with this email already exists
+ *   get:
+ *     summary: Get all customers or search by email
+ *     tags: [Customers]
+ *     parameters:
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
+ *         description: Filter by email address
+ *     responses:
+ *       200:
+ *         description: List of customers
+ */
 app.post('/api/v1/customers', (req, res) => {
   const { customerType, firstName, lastName, email, phone, dateOfBirth, annualIncome } = req.body;
   
